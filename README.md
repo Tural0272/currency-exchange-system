@@ -20,6 +20,12 @@ npm run setup
 npm run dev
 ```
 
+If some actions (e.g. Fund Wallet / Buy / Sell) do not update after the first start:
+1) Logout and login again (token/session refresh)
+2) If needed, restart the app (reload Expo) and try again
+
+Note: `npm run setup` may recreate the SQLite database (demo user is re-initialized).
+
 Expected:
 - Backend starts on `http://localhost:3010`
 - Health check: `http://localhost:3010/health`
