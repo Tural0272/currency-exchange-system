@@ -1,0 +1,29 @@
+erDiagram
+    USERS {
+        int id PK
+        string email UK
+        string passwordHash
+        string name
+        datetime createdAt
+    }
+    
+    WALLETS {
+        int id PK
+        int userId FK
+        string currencyCode
+        decimal balance
+    }
+    
+    TRANSACTIONS {
+        int id PK
+        int userId FK
+        string type
+        string currencyCode
+        decimal amount
+        decimal rate
+        decimal plnChange
+        datetime createdAt
+    }
+    
+    USERS ||--o{ WALLETS : "has"
+    USERS ||--o{ TRANSACTIONS : "makes"

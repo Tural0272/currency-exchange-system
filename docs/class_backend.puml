@@ -1,0 +1,102 @@
+@startuml
+!theme plain
+
+package "Backend API" {
+  class Server {
+    -app: Express
+    -port: number
+    +start(): void
+  }
+  
+  class Database {
+    -db: SQLiteDatabase
+    +initDatabase(): void
+    +getDatabase(): SQLiteDatabase
+  }
+  
+  class AuthMiddleware {
+    -JWT_SECRET: string
+    +authenticateToken(req, res, next): void
+    +generateToken(userId, email): string
+  }
+  
+  class AuthRoutes {
+    +register(req, res): void
+    +login(req, res): void
+  }
+  
+  class RatesRoutes {
+    +getCurrent(req, res): void
+    +getHistory(req, res): void
+    +getBuySell(req, res): void
+  }
+  
+  class WalletRoutes {
+    +getBalances(req, res): void
+    +fund(req, res): void
+  }
+  
+  class TradeRoutes {
+    +buy(req, res): void
+    +sell(req, res): void
+  }
+  
+  class TransactionRoutes {
+    +getTransactions(req, res): void
+  }
+  
+  class NBPClient {
+    +getCurrentRates(): Promise<Rate[]>
+    +getHistoricalRates(code, days): Promise<Rate[]>
+    +getBuySellRates(code): Promise<BuySellRate>
+  }
+  
+  class User {
+    +id: number
+    +email: string
+    +passwordHash: string
+    +name: string
+    +createdAt: Date
+  }
+  
+  class Wallet {
+    +id: number
+    +userId: number
+    +currencyCode: string
+    +balance: number
+  }
+  
+  class Transaction {
+    +id: number
+    +userId: number
+    +type: 'BUY' | 'SELL' | 'FUND'
+    +currencyCode: string
+    +amount: number
+    +rate: number
+    +plnChange: number
+    +createdAt: Date
+  }
+}
+
+Server --> AuthRoutes
+Server --> RatesRoutes
+Server --> WalletRoutes
+Server --> TradeRoutes
+Server --> TransactionRoutes
+
+AuthRoutes --> Database
+AuthRoutes --> AuthMiddleware
+RatesRoutes --> NBPClient
+WalletRoutes --> Database
+WalletRoutes --> AuthMiddleware
+TradeRoutes --> Database
+TradeRoutes --> AuthMiddleware
+TradeRoutes --> NBPClient
+TransactionRoutes --> Database
+TransactionRoutes --> AuthMiddleware
+
+Database --> User
+Database --> Wallet
+Database --> Transaction
+
+@enduml

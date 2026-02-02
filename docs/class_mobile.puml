@@ -1,0 +1,120 @@
+@startuml
+!theme plain
+
+package "Mobile App" {
+  class App {
+    +render()
+  }
+  
+  class AuthContext {
+    -user: User
+    -token: string
+    -loading: boolean
+    +login(email, password): Promise
+    +register(email, password, name): Promise
+    +logout(): void
+  }
+  
+  class ApiClient {
+    -baseURL: string
+    -token: string
+    +get(url): Promise
+    +post(url, data): Promise
+  }
+  
+  class LoginScreen {
+    -email: string
+    -password: string
+    -loading: boolean
+    +handleLogin(): void
+  }
+  
+  class RegisterScreen {
+    -email: string
+    -password: string
+    -name: string
+    -loading: boolean
+    +handleRegister(): void
+  }
+  
+  class HomeScreen {
+    -balances: Balance[]
+    -rates: Rate[]
+    +loadData(): void
+    +onRefresh(): void
+  }
+  
+  class RatesScreen {
+    -rates: Rate[]
+    -selectedCode: string
+    -searchCode: string
+    +loadRates(): void
+    +loadSingleRate(code): void
+  }
+  
+  class HistoryScreen {
+    -code: string
+    -days: number
+    -history: HistoryData
+    +loadHistory(): void
+  }
+  
+  class TradeScreen {
+    -type: 'BUY' | 'SELL'
+    -code: string
+    -amount: number
+    -rate: Rate
+    +handleTrade(): void
+  }
+  
+  class WalletScreen {
+    -balances: Balance[]
+    -fundAmount: number
+    +loadBalances(): void
+    +handleFund(): void
+  }
+  
+  class SettingsScreen {
+    +handleLogout(): void
+  }
+  
+  class ConnectionSettingsScreen {
+    -url: string
+    +handleSave(): void
+    +handleReset(): void
+  }
+  
+  class AboutScreen {
+    +render(): JSX
+  }
+  
+  class ApiUtils {
+    +getApiBaseUrl(): Promise<string>
+    +setApiBaseUrl(url): Promise<void>
+    +createApiClient(token): ApiClient
+    +detectHostIP(): string
+  }
+}
+
+App --> AuthContext
+App --> LoginScreen
+App --> RegisterScreen
+App --> HomeScreen
+App --> RatesScreen
+App --> HistoryScreen
+App --> TradeScreen
+App --> WalletScreen
+App --> SettingsScreen
+
+LoginScreen --> AuthContext
+RegisterScreen --> AuthContext
+HomeScreen --> ApiClient
+RatesScreen --> ApiClient
+HistoryScreen --> ApiClient
+TradeScreen --> ApiClient
+WalletScreen --> ApiClient
+SettingsScreen --> AuthContext
+ConnectionSettingsScreen --> ApiUtils
+ApiClient --> ApiUtils
+
+@enduml
